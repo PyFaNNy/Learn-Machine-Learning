@@ -5,11 +5,12 @@ namespace NeuralNetworks
     public class Layer
     {
         public List<Neuron> Neurons { get; }
-        public int Count => Neurons?.Count?? 0;
+        public int NeuronCounts => Neurons?.Count?? 0;
+        public NeuronType NeuronType;
         public Layer(List<Neuron> neurons, NeuronType type = NeuronType.Normal)
         {
             //TODO: проверить все входные нейроны на соответсвие типу
-
+            NeuronType = type;
             Neurons = neurons;
         }
 
@@ -21,6 +22,11 @@ namespace NeuralNetworks
                 result.Add(neuron.Output);
             }
             return result;
+        }
+
+        public override string ToString()
+        {
+            return NeuronType.ToString();
         }
     }
 }
