@@ -34,6 +34,66 @@ namespace NeuralNetworks
             }
         }
 
+        private double[,] Scalling(double[,] inputs)
+        {
+            var result = new double[inputs.GetLength(0), inputs.GetLength(1)];
+
+            for (int column = 0; column < inputs.GetLength(1); column++)
+            {
+                var min = inputs[0,column];
+                var max = inputs[0, column];
+
+                for (int row = 1; row < inputs.GetLength(1); row++)
+                {
+                    var item = inputs[row, column];
+                    if(item < min)
+                    {
+                        min = item;
+                    }
+
+                    if(item > max)
+                    {
+                        max = item;
+                    }
+                }
+
+                var divider = max - min;
+
+                for (int row = 1; row < inputs.GetLength(0); row++)
+                {
+                    result[row, column] = (inputs[row, column] - min) / divider;
+                }
+            }
+            return result;
+        } 
+
+        private double[,] normalization(double[,] inputs)
+        {
+            var result = new double[inputs.GetLength(0), inputs.GetLength(1)];
+
+            for (int column = 0; column < inputs.GetLength(1); column++)
+            {
+                var sum = 0.0;
+                for (int row = 0; row < inputs.GetLength(1); row++)
+                {
+                    sum += inputs[row, column];
+                }
+                var average = sum / inputs.GetLength(0);
+
+                var error = 0.0;
+                for (int row = 1; row < inputs.GetLength(1); row++)
+                {
+                    error = Math.Pow(inputs[row, column] - average, 2);
+                }
+                var standardError = Math.Sqrt(error / inputs.GetLength(0));
+                for (int row = 0; row < inputs.GetLength(1); row++)
+                {
+                    result[row, column] = (inputs[row, column] - average) / standardError;
+                }
+            }
+            return result;
+        }
+
         public double Learn(List<Tuple<double, double[]>> dataset, int epoch)
         {
             var error = 0.0;
